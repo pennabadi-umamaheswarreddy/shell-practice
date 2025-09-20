@@ -1,6 +1,6 @@
 #! /bin/bash
 
 echo "Please enter your PIN number"
-read PIN_NUMBER # here PIN_NUMBER is varible 
+read -s PIN_NUMBER # here PIN_NUMBER is varible 
 
 echo "PIN entered is: $PIN_NUMBER"
