@@ -7,29 +7,20 @@ if [ $USERID -ne 0]; then
     exit 1 # failure is other than 0
 fi 
 
-dnf install mysql -y 
-
-if [ $? -ne 0]; then 
-    echo "ERROR:: Installing MySQL is failure"
+VALIDATE(){ #funtions receive inputs through args just like shell script args 
+    if [ $1 -ne 0]; then 
+    echo "ERROR:: Installing $2 is failure"
     exit 1
 else 
-    echo "Installing MYSQL is SUCCESS"
+    echo "Installing $2 is SUCCESS"
 fi
+}
+
+dnf install mysql -y 
+VALIDATE $? "MySQL"
 
 dnf install nginx -y 
-
-if [ $? -ne 0]; then 
-    echo "ERROR:: Installing Nginx is failure"
-    exit 1
-else 
-    echo "Installing Nginx is SUCCESS"
-fi
+VALIDATE $? "Nginx"
 
 dnf install mongdb-mongosh -y 
-
-if [ $? -ne 0]; then 
-    echo "ERROR:: Installing mongodb-mongosh is failure"
-    exit 1
-else 
-    echo "Installing mongodb-mongosh is SUCCESS"
-fi
+VALIDATE $? "mongosh"
