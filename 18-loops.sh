@@ -27,27 +27,18 @@ else
 fi
 }
 
-dnf list installed mysql &>>$LOG_FILE
-# Install if it is not found
-if [$? -ne 0]; then 
-    dnf install mysql -y &>>$LOG_FILE
-    VALIDATE $? "MySQL"
-else 
-    echo "MySQL already exist .... $Y SKIPPING $N" | tee -a $LOG_FILE
-fi 
+# $@
 
-dnf list installed nginx &>>$LOG_FILE
-if [$? -ne 0]; then 
-    dnf install nginx -y &>>$LOG_FILE
-    VALIDATE $? "Nginx"
-else 
-    echo "Nginx already exist .... $Y SKIPPING $N" | tee -a $LOG_FILE
-fi 
+for package in $@
+do 
+    #check package is already installed or not 
+    dnf list installed $package &>>$LOG_FILE
 
-dnf list installed python3 &>>$LOG_FILE
-if [$? -ne 0]; then 
-    dnf install python3 -y &>>$LOG_FILE
-    VALIDATE $? "python3"
-else 
-    echo "Nginx already exist .... $Y SKIPPING $N" | tee -a $LOG_FILE
-fi
+    #if exit status is 0, already installed. -ne 0 need to install it 
+    if [$? -ne 0]; then 
+        dnf install $package -y &>>$LOG_FILE
+        VALIDATE $? "$package"
+    else 
+        echo -e "$package already installed.... $Y SKIPPING $N"
+    fi 
+done
